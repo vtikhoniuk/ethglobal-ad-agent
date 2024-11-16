@@ -1,97 +1,35 @@
-import React, { useEffect, useState } from 'react';
-import Login from './components/Login';
-import CampaignForm from './components/CampaignForm';
-import GeneratedCampaign from './components/GeneratedCampaign';
-import axios from 'axios';
+import React, { useState } from 'react';
+import AuthScreen from './components/AuthScreen';
+import DataInputScreen from './components/DataInputScreen';
+import ResultScreen from './components/ResultScreen';
+import { ProcessingResult } from './types';
 
-interface User {
-  token: string;
-}
+const App: React.FC = () => {
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
+  const [processingResult, setProcessingResult] = useState<ProcessingResult | null>(null);
 
-interface Campaign {
-  id: number;
-  generatedText: string;
-  estimatedReach: number;
-}
+  const handleAuthSuccess = () => {
+    setIsAuthenticated(true);
+  };
 
-declare global {
-    interface Window {
-      Telegram: {
-        WebApp: any;
-      };
-    }
+  const handleDataSubmit = (result: ProcessingResult) => {
+    setProcessingResult(result);
+  };
+
+  const handleConfirm = (usdcAmount: number) => {
+    // Логика отправки USDC и подтверждения
+    console.log(`Пользователь подтвердил отправку ${usdcAmount} USDC`);
+  };
+
+  if (!isAuthenticated) {
+    return <AuthScreen onAuthSuccess={handleAuthSuccess} />;
   }
-export function App() {
-  const [user, setUser] = useState<User | null>(null);
-  const [generatedCampaign, setGeneratedCampaign] = useState<Campaign | null>(
-    null
-  );
 
-  useEffect(() => {
-    const tg = (window as any).Telegram.WebApp;
-    tg.ready();
-  }, []);
+  if (!processingResult) {
+    return <DataInputScreen onSubmit={handleDataSubmit} />;
+  }
 
-  const handleLoginSuccess = (userData: User) => {
-    setUser(userData);
-  };
-
-  const handleCampaignSubmit = async (formData: FormData) => {
-    try {
-      const response = await axios.post('/api/campaigns', formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-          Authorization: `Bearer ${user?.token}`,
-        },
-      });
-      setGeneratedCampaign(response.data);
-    } catch (error) {
-      console.error('Error submitting campaign:', error);
-    }
-  };
-
-  const handleEdit = (text: string) => {
-    if (generatedCampaign) {
-      setGeneratedCampaign({ ...generatedCampaign, generatedText: text });
-    }
-  };
-
-  const handlePayment = async (amount: number) => {
-    try {
-      const response = await axios.post(
-        '/api/campaigns/pay',
-        {
-          campaignId: generatedCampaign?.id,
-          amount,
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${user?.token}`,
-          },
-        }
-      );
-      // Handle payment response
-      alert('Payment initiated successfully!');
-    } catch (error) {
-      console.error('Error initiating payment:', error);
-    }
-  };
-
-  return (
-    <div className="App">
-      {!user ? (
-        <Login onLoginSuccess={handleLoginSuccess} />
-      ) : generatedCampaign ? (
-        <GeneratedCampaign
-          campaign={generatedCampaign}
-          onEdit={handleEdit}
-          onSubmit={handlePayment}
-        />
-      ) : (
-        <CampaignForm onSubmit={handleCampaignSubmit} />
-      )}
-    </div>
-  );
-}
+  return <ResultScreen result={processingResult} onConfirm={handleConfirm} />;
+};
 
 export default App;

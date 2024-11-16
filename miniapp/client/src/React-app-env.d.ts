@@ -1,1 +1,1 @@
-// TODO react scripts???
+/// <reference types="react-scripts" />
