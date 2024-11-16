@@ -27,11 +27,11 @@ const DataInputScreen: React.FC<DataInputScreenProps> = ({ onSubmit }) => {
     }
 
     try {
-      // Отправляем данные на сервер для обработки
+      // Send data to server
       const response = await axios.post('/campaigns/process', formData, {
         headers: { 'Content-Type': 'multipart/form-data' },
       });
-      // Получаем результат обработки
+      // Receiving results
       onSubmit(response.data);
     } catch (error) {
       console.error('Ошибка при отправке данных:', error);

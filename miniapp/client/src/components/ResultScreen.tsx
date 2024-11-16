@@ -11,7 +11,6 @@ const ResultScreen: React.FC<ResultScreenProps> = ({ result, onConfirm }) => {
   const [usdcAmount, setUsdcAmount] = useState<number>(0);
 
   const handleConfirm = () => {
-    // Передаём сумму USDC для отправки на рекламу
     onConfirm(usdcAmount);
   };
 

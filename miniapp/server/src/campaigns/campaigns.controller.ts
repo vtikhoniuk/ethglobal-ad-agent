@@ -2,7 +2,6 @@ import {
     Controller,
     Post,
     UseInterceptors,
-    UploadedFiles,
     Body,
     Req,
     Res,

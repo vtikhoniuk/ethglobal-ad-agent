@@ -17,7 +17,6 @@ const App: React.FC = () => {
   };
 
   const handleConfirm = (usdcAmount: number) => {
-    // Логика отправки USDC и подтверждения
     console.log(`Пользователь подтвердил отправку ${usdcAmount} USDC`);
   };
 

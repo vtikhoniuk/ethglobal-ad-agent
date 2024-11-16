@@ -11,7 +11,6 @@ export class AuthMiddleware implements NestMiddleware {
 
     try {
       // Simulate token verification
-      // In production, verify the token with Circle API or your auth service
       (req as any).user = { id: 'user_id', email: 'user@example.com' };
       next();
     } catch (error) {
