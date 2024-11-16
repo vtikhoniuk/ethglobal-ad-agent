@@ -1,6 +1,6 @@
 # Stage 1: Build React app
 FROM node:14-alpine AS build
-WORKDIR /app
+WORKDIR /miniapp
 COPY package*.json tsconfig.json ./
 RUN npm install
 COPY . .

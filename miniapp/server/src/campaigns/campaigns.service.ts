@@ -10,16 +10,20 @@ export class CampaignsService {
     private campaignsRepository: Repository<Campaign>,
   ) {}
 
-  create(campaignData): Promise<Campaign> {
+  create(campaignData: Partial<Campaign>): Promise<Campaign> {
     const campaign = this.campaignsRepository.create(campaignData);
     return this.campaignsRepository.save(campaign);
   }
-
-  update(id: number, data): Promise<any> {
-    return this.campaignsRepository.update(id, data);
+  async update(id: number, data: Partial<Campaign>): Promise<Campaign> {
+    await this.campaignsRepository.update(id, data);
+    return this.findById(id);
   }
 
-  findById(id: number): Promise<Campaign> {
-    return this.campaignsRepository.findOne(id);
+  async findById(id: number): Promise<Campaign> {
+    const campaign = await this.campaignsRepository.findOne({ where: { id } });
+    if (!campaign) {
+      throw new Error('Campaign not found');
+    }
+    return campaign;
   }
 }

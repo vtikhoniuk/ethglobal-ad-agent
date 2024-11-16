@@ -39,30 +39,29 @@ import {
     @Post()
     @UseInterceptors(AnyFilesInterceptor())
     async createCampaign(
-      @UploadedFiles() files: Express.Multer.File[],
+      // @UploadedFiles() files: Express.Multer.File[],
       @Body() body: CreateCampaignDto,
       @Req() req: Request,
       @Res() res: Response,
     ) {
       try {
-        const fileNames = files ? files.map((file) => file.originalname) : [];
+        // const fileNames = files ? files.map((file) => file.originalname) : [];
         const campaignData = {
           campaignName: body.campaignName,
           websiteLink: body.websiteLink,
           description: body.description,
-          documents: fileNames,
-          userId: req.user.id,
+          // documents: fileNames,
+          userId: (req as CustomRequest).user.id,
         };
         const campaign = await this.campaignsService.create(campaignData);
-  
+
         // Send data to processing application
         const processingResponse = await lastValueFrom(
           this.httpService.post(
-            process.env.PROCESSING_APP_URL,
+            process.env.PROCESSING_APP_URL || '',
             campaign,
           ),
         );
-  
         // Update campaign with generated data
         await this.campaignsService.update(campaign.id, {
           generatedText: processingResponse.data.text,
@@ -81,14 +80,14 @@ import {
     }
   
     @Post('pay')
-    async initiatePayment(@Body() body, @Req() req: Request, @Res() res: Response) {
+    async initiatePayment(@Body() body: { campaignId: string; amount: number }, @Req() req: Request & { user: { id: string } }, @Res() res: Response) {
       const { campaignId, amount } = body;
       try {
-        const campaign = await this.campaignsService.findById(campaignId);
-        if (!campaign || campaign.userId !== req['user'].id) {
+        const campaign = await this.campaignsService.findById(Number(campaignId));
+        if (!campaign || campaign.userId !== req.user.id) {
           return res.status(HttpStatus.FORBIDDEN).json({ message: 'Access denied.' });
         }
-  
+
         // Simulate payment initiation via Circle API
         // Replace with actual API call to Circle
         const paymentResponse = {

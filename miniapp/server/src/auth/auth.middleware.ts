@@ -1,6 +1,5 @@
 import { Injectable, NestMiddleware } from '@nestjs/common';
 import { Request, Response, NextFunction } from 'express';
-import Reques
 
 @Injectable()
 export class AuthMiddleware implements NestMiddleware {
@@ -13,7 +12,7 @@ export class AuthMiddleware implements NestMiddleware {
     try {
       // Simulate token verification
       // In production, verify the token with Circle API or your auth service
-      req['user'] = { id: 'user_id', email: 'user@example.com' };
+      (req as any).user = { id: 'user_id', email: 'user@example.com' };
       next();
     } catch (error) {
       return res.status(401).send('Unauthorized');
