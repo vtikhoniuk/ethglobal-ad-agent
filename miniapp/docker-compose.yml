@@ -1,0 +1,31 @@
+version: '3'
+services:
+  server:
+    build: ./server
+    ports:
+      - '3000:3000'
+    environment:
+      - NODE_ENV=production
+      - CIRCLE_API_KEY=${CIRCLE_API_KEY}
+      - CIRCLE_BASE_URL=${CIRCLE_BASE_URL}
+      - PROCESSING_APP_URL=http://processing-app:4000/api/process
+    volumes:
+      - ./server:/app
+    depends_on:
+      - processing-app
+
+  client:
+    build: ./client
+    ports:
+      - '80:80'
+    depends_on:
+      - server
+    volumes:
+      - ./client:/app
+
+  processing-app:
+    build: ./processing-app
+    ports:
+      - '4000:4000'
+    volumes:
+      - ./processing-app:/app

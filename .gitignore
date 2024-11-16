@@ -5,11 +5,13 @@ miniapp/client/.env.local
 miniapp/client/.next/
 miniapp/client/.cache/
 miniapp/client/yarn.lock
+miniapp/client/.DS_Store
 
 miniapp/server/node_modules/
 miniapp/server/.env
 miniapp/server/.env.local
 miniapp/server/yarn.lock
+miniapp/server/.DS_Store
 
 miniapp/node_modules/
 miniapp/dist/
