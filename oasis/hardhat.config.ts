@@ -15,11 +15,6 @@ const config: HardhatUserConfig = {
       accounts: [`0x${ETH_PRIVATE_KEY}`],
       chainId: 0x5aff,
     },
-    'sapphire-localnet': { // docker run -it -p8545:8545 -p8546:8546 ghcr.io/oasisprotocol/sapphire-localnet -test-mnemonic
-      url: 'http://localhost:8545',
-      accounts: [`0x${ETH_PRIVATE_KEY}`],
-      chainId: 0x5aff,
-    },
     hardhat: {
       forking: {
         url: "https://rpc-amoy.polygon.technology/",

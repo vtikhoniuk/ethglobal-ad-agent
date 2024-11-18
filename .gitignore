@@ -30,3 +30,5 @@ idea/
 coverage/
 build/
 out/
+
+twa/node_modules
